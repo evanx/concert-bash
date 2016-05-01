@@ -2,22 +2,23 @@
 
 set -u -e
 
-concert=$0
+concerto=$0
 
 # supported clients
 
 client_redishub() {
   home=${home:=$HOME}
   priv=${priv:=$home/.redishub}
-  repoName=${repoName:=redishub-concert}
+  repoName=${repoName:=certs-concerto}
   repo=${repo:=$home/$repoName}
   rapi="http://clisecure.redishub.com"
   help='https://github.com/evanx/rquery/blob/master/README.md'
 }
 
 client=${client:=redishub}
-client_authorized_certs=${client}_authorized_certs
 client_$client
+
+client_authorized_certs=${client}_authorized_certs
 
 # bash echo styles and colors
 
@@ -235,7 +236,7 @@ c0gen() { # generate a timestamped cert in $priv/tmp
   headline `pwd`
   ls -lt | head
   echo "$id" > $priv/latest.id
-  hint "$concert deploy $id"
+  hint "$concerto deploy $id"
 }
 
 c0archive() { # move contents of $priv to $priv/tmp/archive
@@ -258,7 +259,7 @@ c0gharchive() {
    then
       abort "Please move $archive/$repoName as follows:" \
         "mv $archive/$repoName $archive/`date +%Hh%Mm%S`.$repoName" \
-        "$concert gharchive"
+        "$concerto gharchive"
    fi
    mv -f $repo $archive/. # 2> /dev/null || true
    cd $archive
@@ -288,7 +289,7 @@ c1deploy() { # id - copy generated cert files to $priv
   openssl x509 -text -in cert.pem | grep 'CN='
   headline "$priv $ ls"
   ls -lt
-  hint "$concert ghadd $id"
+  hint "$concerto ghadd $id"
 }
 
 c0deploy() {
@@ -323,7 +324,7 @@ c1gharchiveid() {
    id="$1"
    c0ghcheck
    cd $repo
-   [ ! -f $id.cert.pem ] && abortc "Not found: $repo/$id.cert.pem" "$concert ghadd $id"
+   [ ! -f $id.cert.pem ] && abortc "Not found: $repo/$id.cert.pem" "$concerto ghadd $id"
    mv $id.cert.pem $archive/.
    headline "Moved $id.cert.pem to $archive"
    ls -lt | head
@@ -335,7 +336,7 @@ c1ghadd() {
    c0ghcheck
    cd $repo
    headline `pwd`
-   [ -f $id.cert.pem ] && abortc "Already exists: $id.cert.pem" "$concert gharchiveid $id"
+   [ -f $id.cert.pem ] && abortc "Already exists: $id.cert.pem" "$concerto gharchiveid $id"
    headline "Copying $id.cert.pem to repo: $repo"
    cp $priv/tmp/$id.cert.pem $repo
    sha1sum `ls -t *.pem`
@@ -364,7 +365,7 @@ c2ghinit() {
    info "ghinit user $user with cert id $2"
    if [ -d $repo ]
    then
-      abort "Already exists: $repo" "$concert ghadd ID #or $concert ghcommit MESSAGE"
+      abort "Already exists: $repo" "$concerto ghadd ID #or $concerto ghcommit MESSAGE"
    fi
    headline "Validate exists: https://github.com/$user"
    curl -s -I https://github.com/$user | grep '^HTTP' | grep OK || abort "Invalid Github user: $user"
@@ -563,7 +564,7 @@ c0ghshow() {
    fi
    if [ ! -d $repo ]
    then
-      abort "Not found: $repo" "$concert ghinit $last #or $concert ghclone"
+      abort "Not found: $repo" "$concerto ghinit $last #or $concerto ghclone"
    fi
    cd $repo
    headline "$repo \$ ls"
@@ -664,10 +665,10 @@ c0help() {
 }
 
 c0danger1() {
-   $concert archive
-   $concert gen
-   $concert deploy
-   $concert ghadd
+   $concerto archive
+   $concerto gen
+   $concerto deploy
+   $concerto ghadd
 }
 
 # cli command
