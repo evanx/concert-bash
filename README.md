@@ -3,8 +3,6 @@
 
 A bash script for the "Concerto" API authentication scheme, specified at: https://github.com/evanx/concerto
 
-See example repo: https://github.com/evanx/certs-concerto - containing `redishub_authorized_certs.cson` manifest, listing the PEM files in the repo.
-
 
 # Related work
 
